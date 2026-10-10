@@ -74,7 +74,6 @@ typical_duration_days = {
     "Industrial_Infrastructure": (400, 2200),
 }
 
-
 # ============================================================
 # 3. GENERATE PROJECTS AND SNAPSHOTS
 # ============================================================
@@ -276,6 +275,14 @@ for project_number in range(num_projects):
     planned_start_date = pd.Timestamp("2022-01-01") + pd.Timedelta(
         days=int(rng.integers(0, 365))
     )
+    # Remember the previous snapshot's cumulative progress.
+# Each project's progress starts at 0%.
+    previous_progress = {
+    "land_acquired_pct": 0.0,
+    "compensation_paid_pct": 0.0,
+    "documentation_completion_pct": 0.0,
+    "rehabilitation_progress_pct": 0.0,
+}
 
     # ========================================================
     # SNAPSHOTS
@@ -651,6 +658,11 @@ for project_number in range(num_projects):
 
             "delayed": delayed,
         }
+
+        for column, previous_value in previous_progress.items():
+            current_value = float(row[column])
+            row[column] = max(previous_value, current_value)
+            previous_progress[column] = row[column]
 
         projects.append(row)
 
