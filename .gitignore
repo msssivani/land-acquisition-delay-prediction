@@ -24,4 +24,4 @@ models/*
 Thumbs.db
 
 # IDE
-.vscode/
+.vscode/ 
